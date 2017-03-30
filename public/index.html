@@ -67,7 +67,7 @@
 						</div>
 
         </section>
-				<section>
+	<!--			<section>
 					<img src="img/bio-pic.png">
 					<div style="width:60%;float:right">
 						<div style="text-align:left;">
@@ -320,330 +320,51 @@ openfin --launch --config app.json
 					<li>OpenFin doesn’t limit what frameworks you can use.</li>
 				</ul>
 			</section>
-
-				<section>
-					<section>
-							<h1>Windowing</h1>
-
-					</section>
-					<section>
-
-							<h3>New Window</h3>
-							<pre><code class="hljs new-win" contenteditable>
-var childWindow = new fin.desktop.Window({
-    name: "childWindow",
-    url: "child.html",
-    defaultWidth: 320,
-    defaultHeight: 320,
-    defaultTop: 10,
-    defaultLeft: 300,
-    frame: true,
-    resize: false,
-    autoShow: true,
-    saveWindowState:false
-}, () => {
-    console.log("The window has successfully been created");
-}, () => {
-    console.log("Error creating window");
-});
-</pre></code>
-							<button id="new-win" class="demo-button">run demo</button>
-					</section>
-
+-->
 
 
 					<section>
-							<h3>Injecting Content</h3>
-
-							<pre><code class="inject-content hljs" contenteditable>
-var childWindow = new fin.desktop.Window({
-    name: "childWindow",
-    url: "child.html",
-    defaultWidth: 320,
-    defaultHeight: 320,
-    defaultTop: 10,
-    defaultLeft: 300,
-    autoShow: true,
-    saveWindowState:false
-}, () => {
-    window.setTimeout(() => {
-      let h = document.createElement("h1");
-      h.innerText = "Hello World";
-      let win = childWindow.getNativeWindow();
-      win.document.body.appendChild(h);
-		},1000);
-});
-
-							</pre></code>
-							<button id="inject-content" class="demo-button">run demo</button>
-					</section>
-					<section>
-							<h3>Child Window Interaction</h3>
-							<pre><code class="win-interact hljs" contenteditable>
-var childWindow = new fin.desktop.Window({
-    name: "childWindow",
-    url: "child2.html",
-    defaultWidth: 320,
-    defaultHeight: 320,
-    defaultTop: 10,
-    defaultLeft: 300,
-    autoShow: true
-});
-
-document.getElementById("win-interact-move").addEventListener("click",function(){
-   childWindow.moveBy(50,50);
-});
-document.getElementById("win-interact-hide").addEventListener("click",function(){
-   childWindow.hide();
-});
-document.getElementById("win-interact-show").addEventListener("click",function(){
-   childWindow.show();
+							<h3>CommandLine Arguments</h3>
+							<pre><code class="hljs system-clArgs" contenteditable>
+fin.desktop.System.getCommandLineArguments(args => {
+	document.getElementById("clArgsInfo").innerHTML = JSON.stringify(args);
+	hljs.highlightBlock(document.getElementById("clArgsInfo"));
 });
 							</code></pre>
-							<button id="win-interact" class="demo-button">run demo</button>
-							<button id="win-interact-move" class="demo-button">move child</button>
-							<button id="win-interact-hide" class="demo-button">hide child</button>
-							<button id="win-interact-show" class="demo-button">show child</button>
+							<button class="demo-button" id="system-clArgs">run demo</button>
+
+						<div id="clArgsInfo" class="api-output" contenteditable></div>
 					</section>
+
 					<section>
-							<h2>Animating Windows</h2>
-							<pre><code class="hljs win-animate" contenteditable>
-var childWindow = new fin.desktop.Window({
-  name: "childWindow",
-  url: "child.html",
-  defaultWidth: 320,
-  defaultHeight: 320,
-  defaultTop: 600,
-  defaultLeft: 800,
-  autoShow: true,
-  saveWindowState:false
-}, () => {
-  var win = childWindow;
-  win.animate({
-    position:{
-      left:10,
-      top:10,
-      duration:2000
-    }},
-    {interrupt:false, tween:"ease-out-bounce"},
-		function(evt){
-		  console.log("Window position animation complete");
-		  win.animate({
-			  size:{
-          width:500,
-          height:500,
-          duration:1000
-        }},
-        {interrupt:false, tween:"ease-in"},
-        function(evt){
-          console.log("Window size animation complete");
-          //set opacity animation
-          win.addEventListener("bounds-changing",function(){
-	          win.animate({
-              opacity:{
-                opacity:.5,
-                duration:300
-             }},
-             {interrupt:true})
-         });
-
-         win.addEventListener("bounds-changed",function(){
-	         win.animate({
-	           opacity:{
-               opacity:1,
-               duration:300
-           }},
-           {interrupt:true})
-         });
-      });
-		});
-
-  }, function () {
-    console.log("Error creating window");
-});
-</code></pre>
-							<button class="demo-button" id="win-animate">run demo</button>
-					</section>
-					<section>
-							<h3>Tear-outs</h3>
-							<div style="border:1px dotted white;width: 90%;margin-top: 20px;margin-right: auto;margin-bottom: 20px;margin-left: auto;"><img height="25" width="25" src="img/tearout.png" draggable class="tearout" style="float: left;margin-top: 0px;background-color:white;"><span class="tearout-content">Tear this Content out into a new Window!</span></div>
-							<pre><code class="hljs demo-tearout" contenteditable>
-var root = document.location.protocol + "//" + document.location.host;
-var tearoutWindow = new fin.desktop.Window({
-	name: "tearout_" + Date.now(),
-	url: root + "/tearout.html",
-	frame:false,
-	autoShow:false,
-	"defaultHeight": 75,
-	"defaultWidth": 500});
-
-document.querySelector(".tearout").addEventListener("dragend",event =>{
-	event.stopPropagation();
-	event.preventDefault();
-	var tearout = tearoutWindow.getNativeWindow();
-	tearout.document.getElementById("content").innerText = document.querySelector(".tearout-content").textContent;
-	tearoutWindow.moveTo(event.screenX, event.screenY);
-	tearoutWindow.show();
-	tearoutWindow.bringToFront();
-});
-
-							</code></pre>
-							<button class="demo-button" id="demo-tearout">run demo</button>
-					</section>
-					<section>
-							<h3>Docking</h3>
-							<pre><code class="hljs demo-dock" contenteditable>
-var parentWindow = fin.desktop.Window.getCurrent();
-var childWindow = new fin.desktop.Window({
-   name: "dockWindow",
-   url: "dock-child.html",
-   defaultWidth: 320,
-   defaultHeight: 320,
-   defaultTop: 10,
-   defaultLeft: 300,
-   frame: true,
-   resize: false,
-   autoShow: true,
-   saveWindowState:false
-}, () =>{
-   childWindow.addEventListener("bounds-changed",boundsChanged);
-}, () =>{
-   console.log("Error creating window");
-});
-
-function boundsChanged(event){
-   parentWindow.getBounds(function(bounds){
-      isDockable(decorateBounds(bounds),decorateBounds(event), function(r){
-      if (r){
-         childWindow.animate({
-            position:{
-            left:(bounds.left - (event.width-10)),
-            top:bounds.top,
-            duration:500
-			   }
-		  },
-      {
-         interrupt:false
-      },
-         function(){
-            childWindow.joinGroup(parentWindow);
-         });
-      }
-    });
-	});
-}
-
-function decorateBounds(b){
-	return {
-		left:b.left,
-		right:(b.left + b.width),
-		top:b.top,
-		bottom:(b.top + b.height)
-	};
-}
-
-function inRange(a,b){
-	var margin = 25;
-	var range = [b-margin,b+margin];
-	return (a > range[0] && a < range[1]);
-}
-
-function isDockable(pBounds,cBounds, callback){
-	//is it already docked?
-
-	return fin.desktop.Window.getCurrent().getGroup(function(group){
-  	if (group.length > 0){
-			callback.call(this,false);
-		}
-		else {
-	   //is it on the side?
-	   if (inRange(pBounds.left,cBounds.right) || inRange(pBounds.right,cBounds.left)){
-		   callback.call(this,true);
-		 }
-		  callback.apply(null,false);
-		}
-});
-}
-
-							</code></pre>
-							<button class="demo-button" id="demo-dock">run demo</button>
-					</section>
-				</section>
-
-				<!-- System Demos -->
-				<section>
-					<section>
-						<h1>System</h1>
-					</section>
-					<section>
-							<h3>Screen Info</h3>
-							<pre><code class="hljs system-monitor" contenteditable>
-fin.desktop.System.getMonitorInfo(function (monitorInfo) {
-    console.log("This object contains information about all monitors: ", monitorInfo);
-		document.getElementById("monitorInfo").innerHTML = JSON.stringify(monitorInfo);
-		 hljs.highlightBlock(document.getElementById("monitorInfo"));
+							<h3>DeviceId</h3>
+							<pre><code class="hljs system-dId" contenteditable>
+fin.desktop.System.getDeviceId(args => {
+	document.getElementById("dIdInfo").innerHTML = JSON.stringify(args);
+	hljs.highlightBlock(document.getElementById("dIdInfo"));
 });
 							</code></pre>
-							<button class="demo-button" id="system-monitor">run demo</button>
+							<button class="demo-button" id="system-dId">run demo</button>
 
-						<div id="monitorInfo" class="api-output" contenteditable></div>
+						<div id="dIdInfo" class="api-output" contenteditable></div>
 					</section>
 
 					<section>
-							<h3>System Info</h3>
-							<pre><code class="hljs system-process" contenteditable>
-fin.desktop.System.getProcessList(function (list) {
-    list.forEach(function (process) {
-        console.log("UUID: " + process.uuid + ", Application Name: " + process.name);
-				document.getElementById("processInfo").innerHTML += JSON.stringify(process);
-				 hljs.highlightBlock(document.getElementById("processInfo"));
-    });
+							<h3>Host Specs</h3>
+							<pre><code class="hljs system-hSpecs" contenteditable>
+fin.desktop.System.getHostSpecs(args => {
+	document.getElementById("hSpecsInfo").innerHTML = JSON.stringify(args);
+	hljs.highlightBlock(document.getElementById("hSpecsInfo"));
 });
 							</code></pre>
-							<button class="demo-button" id="system-process">run demo</button>
-							<div id="processInfo" class="api-output" contenteditable></div>
+							<button class="demo-button" id="system-hSpecs">run demo</button>
+
+						<div id="hSpecsInfo" class="api-output" contenteditable></div>
 					</section>
 
 					<section>
-							<h3>Clipboard Access</h3>
-							<pre><code class="hljs system-clip" contenteditable>
-fin.desktop.Window.getCurrent().getSnapshot(s => {
-  fin.desktop.System.Clipboard.writeText(`<img src="data:image/png;base64,${s}">`,
-  ()=>{
-    console.log("successful");
-  },
-  (err)=>{
-    console.log(`failure: ${err}`);
-  });
-});
-							</code></pre>
-							<button class="demo-button" id="system-clip">run demo</button>
-					</section>
-
-					<section>
-							<h3>Launching an External Process</h3>
-							<pre><code class="hljs system-external" contenteditable>
-fin.desktop.System.launchExternalProcess({
-        path: "notepad",
-        arguments: "",
-        listener: function(code) {
-                console.log('the exit code', code);
-            }
-    },
-    function() {
-        console.log('all good');
-    },
-    function(){
-        console.log('an error');
-    });
-							</code></pre>
-
-							<button class="demo-button" id="system-external">run demo</button>
-					</section>
-				</section>
-		<!--			<section>
-							<h2>Logging</h2>
-							<pre><code class="hljs system-log" contenteditable>
+								<h3>Logging</h3>
+								<pre><code class="hljs system-log" contenteditable>
 fin.desktop.System.log("info",
   "An example log message",
   function () {
@@ -651,203 +372,189 @@ fin.desktop.System.log("info",
   }, function(err) {
       console.log(err);
 });
+								</code></pre>
+								<button class="demo-button" id="system-log">run demo</button>
+						</section>
+
+					<section>
+							<h3>Log List</h3>
+							<pre><code class="hljs system-logList" contenteditable>
+fin.desktop.System.getLogList(logList => {
+	document.getElementById("logListInfo").innerHTML = JSON.stringify(logList);
+	hljs.highlightBlock(document.getElementById("logListInfo"));
+});
 							</code></pre>
-							<button class="demo-button" id="system-log">run demo</button>
-					</section>-->
+							<button class="demo-button" id="system-logList">run demo</button>
+
+						<div id="logListInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Get Log</h3>
+							<pre><code class="hljs system-getLog" contenteditable>
+fin.desktop.System.getLog("debugl170315170013.log",log => {
+	document.getElementById("getLogInfo").innerHTML = log;
+
+});
+
+							</code></pre>
+							<button class="demo-button" id="system-getLog">run demo</button>
+
+						<div id="getLogInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Mouse Position</h3>
+							<pre><code class="hljs system-mouseP" contenteditable>
+fin.desktop.System.getMousePosition(r => {
+	document.getElementById("mousePInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("mousePInfo"));
+});
+
+							</code></pre>
+							<button class="demo-button" id="system-mouseP">run demo</button>
+
+						<div id="mousePInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Process List</h3>
+							<pre><code class="hljs system-processList" contenteditable>
+fin.desktop.System.getProcessList(r => {
+	document.getElementById("processListInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("processListInfo"));
+});
+
+							</code></pre>
+							<button class="demo-button" id="system-processList">run demo</button>
+
+						<div id="processListInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Proxy Settings</h3>
+							<pre><code class="hljs system-proxySettings" contenteditable>
+fin.desktop.System.getProxySettings(r => {
+	document.getElementById("proxySettingsInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("proxySettingsInfo"));
+});
+
+							</code></pre>
+							<button class="demo-button" id="system-proxySettings">run demo</button>
+
+						<div id="proxySettingsInfo" class="api-output" contenteditable></div>
+					</section>
 
 
+					<section>
+							<h3>RVM Info</h3>
+							<pre><code class="hljs system-rvmInfo" contenteditable>
+fin.desktop.System.getRvmInfo(r => {
+	document.getElementById("rvmInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("rvmInfo"));
+});
+
+							</code></pre>
+							<button class="demo-button" id="system-rvmInfo">run demo</button>
+
+						<div id="rvmInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Runtime Version</h3>
+							<pre><code class="hljs system-versionInfo" contenteditable>
+fin.desktop.System.getVersion(r => {
+	document.getElementById("versionInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("versionInfo"));
+});
+
+							</code></pre>
+							<button class="demo-button" id="system-versionInfo">run demo</button>
+
+						<div id="versionInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Screen Info</h3>
+							<pre><code class="hljs system-monitor" contenteditable>
+fin.desktop.System.getMonitorInfo(function (monitorInfo) {
+	document.getElementById("monitorInfo").innerHTML = JSON.stringify(monitorInfo);
+	 hljs.highlightBlock(document.getElementById("monitorInfo"));
+});
+							</code></pre>
+							<button class="demo-button" id="system-monitor">run demo</button>
+
+						<div id="monitorInfo" class="api-output" contenteditable></div>
+					</section>
+
+
+					<section>
+							<h3>Screen Snapshot</h3>
+							<pre><code class="hljs window-bSixFour" contenteditable>
+fin.desktop.Window.getCurrent().getSnapshot( bSixFour =>{
+	document.getElementById("b64Info").innerHTML = bSixFour;
+	});
+							</code></pre>
+
+							<button class="demo-button" id="window-bSixFour">run demo</button>
+							<div id="b64Info" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Window State</h3>
+							<pre><code class="hljs window-state" contenteditable>
+fin.desktop.Window.getCurrent().getState(r =>{
+	document.getElementById("stateInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("stateInfo"));
+	});
+							</code></pre>
+
+							<button class="demo-button" id="window-state">run demo</button>
+							<div id="stateInfo" class="api-output" contenteditable></div>
+					</section>
+
+					<section>
+							<h3>Window Zoom</h3>
+							<pre><code class="hljs window-zoom" contenteditable>
+fin.desktop.Window.getCurrent().getZoomLevel(r =>{
+	document.getElementById("zoomInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("zoomInfo"));
+	});
+							</code></pre>
+
+							<button class="demo-button" id="window-zoom">run demo</button>
+							<div id="zoomInfo" class="api-output" contenteditable></div>
+					</section>
+
+
+					<section>
+							<h3>Window Showing</h3>
+							<pre><code class="hljs window-showing" contenteditable>
+fin.desktop.Window.getCurrent().isShowing(r =>{
+	document.getElementById("showingInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("showingInfo"));
+});
+							</code></pre>
+
+							<button class="demo-button" id="window-showing">run demo</button>
+							<div id="showingInfo" class="api-output" contenteditable></div>
+					</section>
+
+
+					<section>
+							<h3>Window Bounds</h3>
+							<pre><code class="hljs window-bounds" contenteditable>
+fin.desktop.Window.getCurrent().getBounds(r =>{
+	document.getElementById("boundsInfo").innerHTML = JSON.stringify(r);
+	hljs.highlightBlock(document.getElementById("boundsInfo"));
+});
+							</code></pre>
+
+							<button class="demo-button" id="window-bounds">run demo</button>
+							<div id="boundsInfo" class="api-output" contenteditable></div>
+					</section>
 			<!-- end System Demos -->
 
-			<!-- Application Demos -->
-			<section>
-				<section>
-					<h1>Application</h1>
-				</section>
-				<section>
-						<h3>Launching an Application</h3>
-						<pre><code class="hljs app-launch" contenteditable>
-var app = new fin.desktop.Application({
-    url: "http://demoappdirectory.openf.in/desktop/config/apps/OpenFin/HelloOpenFin/index.html",
-    uuid: "foo-88",
-    applicationIcon: "http://demoappdirectory.openf.in/desktop/config/apps/OpenFin/HelloOpenFin/img/openfin.ico",
-    name: "HelloOpenFin",
-		saveWindowState:false,
-    mainWindowOptions: {
-        defaultHeight: 600,
-        defaultWidth: 400,
-        defaultTop: 300,
-        defaultLeft: 300,
-        autoShow: true
-    }
-}, function () {
-    console.log("Application successfully created");
-    app.run();
-}, function () {
-    console.log("Error creating application");
-});
-						</code></pre>
-						<button class="demo-button" id="app-launch">run demo</button>
-				</section>
-				<section>
-						<h3>Managing Child Applications</h3>
-						<pre><code class="hljs app-manage">
-var app = new fin.desktop.Application({
-    url: "http://demoappdirectory.openf.in/desktop/config/apps/OpenFin/HelloOpenFin/index.html",
-    uuid: "foo-88",
-    applicationIcon: "http://demoappdirectory.openf.in/desktop/config/apps/OpenFin/HelloOpenFin/img/openfin.ico",
-    name: "HelloOpenFin",
-    mainWindowOptions: {
-        defaultHeight: 600,
-        defaultWidth: 400,
-        defaultTop: 300,
-        defaultLeft: 300,
-        autoShow: true
-    }
-}, function () {
-    console.log("Application successfully created");
-    app.run();
-}, function () {
-    console.log("Error creating application");
-});
-document.getElementById("app-closebutton").addEventListener("click",function(){
-	app.close();
-});
-
-document.getElementById("app-restartbutton").addEventListener("click",function(){
-	app.restart(function () {
-			console.log("You will not read this.");
-	}, function (err) {
-			console.log("failure:", err);
-	});
-});
-						</code></pre>
-						<button class="demo-button" id="app-manage">run demo</button>
-						<button class="demo-button" id="app-restartbutton">restart app</button>
-						<button class="demo-button" id="app-closebutton">close app</button>
-				</section>
-
-			</section>
-			<!-- end Application Demos -->
-
-			<!-- Notification Demos -->
-			<section>
-				<section>
-					<h1>Notifications</h1>
-				</section>
-				<section>
-						<h3>Creating Desktop Notifications</h3>
-						<pre><code class="hljs noti-create" contenteditable>
-var notification = fin.desktop.Notification({
-    url: "notification.html",
-    message:"This is a notification message"
-});
-						</code></pre>
-						<button class="demo-button" id="noti-create">run demo</button>
-				</section>
-				<section>
-						<h3>Notification Callbacks</h3>
-						<pre><code class="hljs noti-callback" contenteditable>
-var callback = function(message){
-	document.getElementById("noti-callback-msg").innerText = message;
-};
-fin.desktop.InterApplicationBus.subscribe("*","notification-callback",callback);
-var notification = new fin.desktop.Notification({
-    url: "notification-callback.html",
-    message:"This is a notification message",
-		onMessage:callback
-});
-</code></pre>
-						<button class="demo-button" id="noti-callback">run demo</button>
-<pre><code class="hljs" id="noti-callback-msg" contenteditable>
-
-</code></pre>
-				</section>
-			</section>
-			<!-- end Notification Demos -->
-
-			<!-- Inter-App Bus Demos -->
-			<section>
-				<section>
-					<h1>Inter-App Bus</h1>
-				</section>
-				<section>
-						<h3>Topic Messages</h3>
-						<pre><code class="hljs bus-topic"  style="max-height:300px;" contenteditable>
-var callback = function(msg){
-	document.getElementById("bus-topic-msg").innerHTML += JSON.stringify(msg);
-	hljs.highlightBlock(document.getElementById("bus-topic-msg"));
-};
-
-
-fin.desktop.InterApplicationBus.subscribe("*","a topic",callback);
-fin.desktop.InterApplicationBus.publish("a topic", {
-  field1: "value1",
-  field2: "value2"
-});
-
-document.getElementById("bus-unsub").addEventListener("click",function(){
-	fin.desktop.InterApplicationBus.unsubscribe("*","a topic", callback);
-});
-
-						</code></pre>
-						<button class="demo-button" id="bus-topic">run demo</button>
-						<button class="demo-button" id="bus-unsub">unsubscribe</button>
-						<div class="api-output" id="bus-topic-msg" contenteditable></div>
-				</section>
-				<section>
-						<h3>Direct Messages</h3>
-						<pre><code class="hljs bus-direct" style="max-height:300px;" contenteditable>
-var callback = function(msg){
-	document.getElementById("bus-direct-msg").innerHTML += msg + "<br>";
-};
-
-fin.desktop.InterApplicationBus.subscribe("direct-88","direct-topic",callback);
-
-//launch a new application...
-var root = document.location.protocol + "//" + document.location.host;
-var app = new fin.desktop.Application({
-    url: root + "/index-direct.html",
-    uuid: "direct-88",
-    name: "Direct Message Window",
-    mainWindowOptions: {
-        defaultHeight: 600,
-        defaultWidth: 400,
-        defaultTop: 300,
-        defaultLeft: 300,
-        autoShow: true,
-        saveWindowState:false
-    }
-}, () => {app.run();});
-
-document.getElementById("d-bus-send").addEventListener("click",function(){
-	fin.desktop.InterApplicationBus.send("direct-88","direct-topic", {
-		field1: "value1",
-		field2: "value2"
-	});
-});
-
-document.getElementById("d-bus-unsub").addEventListener("click",function(){
-	fin.desktop.InterApplicationBus.unsubscribe("direct-88","direct-topic", callback);
-});
-						</code></pre>
-						<button class="demo-button" id="d-bus-unsub">unsubscribe</button>
-						<button class="demo-button" id="d-bus-send">send</button>
-						<button class="demo-button" id="bus-direct">run demo</button>
-						<div class="api-output hljs json" id="bus-direct-msg" contenteditable style="height:100px;"></div>
-				</section>
-			</section>
-			<!-- end Inter-App Bus Demos  -->
-
-			<section>
-				<h2>Building a PoC</h2>
-				<ul>
-					<li><a class="external" data-link="https://github.com/openfin">Our GitHub Repository</a></li>
-					<li><a class="external" data-link="https://openfin.co/support/release-notes/">General Support Information</a></li>
-					<li><a class="external" data-link="https://www.youtube.com/watch?v=uBuTTAL8A-4">Hello OpenFin Tutorial</a></li>
-					<li><a class="external" data-link="https://github.com/openfin/openfin-training-demo">This Demo</a></li>
-				</ul>
-				<img src="img/poc.png">
-			</section>
 			<section>
 				<h2>Thank You</h2>
 			</section>
@@ -861,7 +568,7 @@ document.getElementById("d-bus-unsub").addEventListener("click",function(){
 			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
 				history: true,
-
+				controls:false,
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
 					{ src: 'bower_components/reveal.js/plugin/markdown/marked.js' },

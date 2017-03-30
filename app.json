@@ -1,10 +1,10 @@
 {
     "devtools_port": 9090,
     "startup_app": {
-        "name": "OpenFin Webinar",
-        "description": "Webinar presentation for OpenFin - first presented 2/8/17",
+        "name": "OpenFin Diagnostic APIs",
+        "description": "Guide to OpenFin APIs Useful for Diagnostics",
         "url": "http://localhost:8080/index.html",
-        "uuid": "OpenFin Webinar-udbrf2z9sehilik9",
+        "uuid": "OpenFin Dapis-udbrf2z9sehilik9",
         "autoShow": false,
         "defaultCentered": true,
         "applicationIcon": "http://localhost:8080/img/openfin.ico",
@@ -13,13 +13,13 @@
         "defaultWidth": 300
     },
     "runtime": {
-        "arguments": "",
+        "arguments": "--v=1",
         "version": "stable"
     },
     "shortcut": {
         "company": "OpenFin",
-        "description": "Openfin Webinar",
-        "name": "Openfin Webinar",
+        "description": "Openfin Diagnostic APIs Guide",
+        "name": "Openfin Diagnostics Guide",
         "icon": "http://localhost:8080/img/openfin.ico"
     }
 }

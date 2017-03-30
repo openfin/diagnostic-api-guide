@@ -1,10 +1,11 @@
-# webinar-demo
-Demo app for OpenFin Webinars.  Built on the OpenFin Runtime and [Reveal-js](http://lab.hakim.se/reveal-js/).
+# Diagnostic APIs Guide
+Guide for OpenFin APIs that are useful in diagnostics, debugging, and reporting.  Built on the OpenFin Runtime and [Reveal-js](http://lab.hakim.se/reveal-js/).
 
 ## Documentation
-This Webinar provides an overview of the OpenFin platform and a hands-on demonstration of key OpenFin APIs.
+This guide provides an interactive view of the following OpenFin runtime APIs:
 
-Documentation for the OpenFin Runtime API can be found [here](https://openfin.co/developers/javascript-api/).
+
+Documentation for the full OpenFin Runtime API can be found [here](https://openfin.co/developers/javascript-api/).
 
 ## Setup
 

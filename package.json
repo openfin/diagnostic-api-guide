@@ -1,17 +1,17 @@
 {
-    "name": "OpenFinWebinar",
+    "name": "OpenFinDiagnosticAPIs",
     "version": "0.0.1",
-    "description": "OpenFin Webinar Demo",
+    "description": "OpenFin Diagnostic APIs Guide",
     "repository": {
         "type": "git",
-        "url": "https://github.com/openfin/webinar-demo"
+        "url": "https://github.com/openfin/diagnostic-api-guide"
     },
     "author": "Nicholas Kolba",
-    "license": "MIT",
+    "license": "APACHE2",
     "bugs": {
-        "url": "https://github.com/openfin/webinar-demo/issues"
+        "url": "https://github.com/openfin/diagnostic-api-guide/issues"
     },
-    "homepage": "https://github.com/openfin/webinar-demo",
+    "homepage": "https://github.com/openfin/diagnostic-api-guide",
     "scripts": {
        "start": "http-server -c-1"
      },
