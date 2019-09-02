@@ -17,6 +17,6 @@
   ],
   "dependencies": {
     "modernizr": "~2.8.3",
-    "reveal.js": "^3.3.0"
+    "reveal.js": "^3.8.0"
   }
 }
